@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!--
+             sentry-android bundles its own SentryInitProvider, which auto-initializes the SDK at
+             process start using the (unset) "io.sentry.dsn" manifest meta-data — before Koin/
+             initSentry() ever runs, and before AppConfig's DSN (possibly blank, by design) can
+             be consulted. With auto-init left on, that unconditional init crashes app startup
+             with "DSN is required" whenever no DSN is configured. Disabling it here makes
+             initSentry(dsn) in AnalyticsClient.android.kt the single source of truth for whether
+             and how Sentry starts.
+        -->
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
+
+        <!--
+             Auto-captures the host app's Context for the Sentry Android SDK, without requiring
+             the app module to wire it explicitly. See
+             com.connectapp.core.analytics.AnalyticsContextInitializer.
+        -->
+        <provider
+            android:name="com.connectapp.core.analytics.AnalyticsContextInitializer"
+            android:authorities="${applicationId}.connectapp.core.analytics.context-initializer"
+            android:exported="false" />
+    </application>
+
+</manifest>

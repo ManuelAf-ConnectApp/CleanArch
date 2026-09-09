@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>FunctionNaming:OrderCard.kt$@Composable internal fun OrderCard( order: Order, )</ID>
+    <ID>FunctionNaming:OrdersScreen.kt$@Composable fun OrdersScreen( modifier: Modifier = Modifier, )</ID>
+    <ID>FunctionNaming:OrdersScreen.kt$@Composable private fun OrdersList( modifier: Modifier = Modifier, state: OrdersState, )</ID>
+    <ID>NoUnusedImports:OrderCard.kt$com.connectapp.presentation.orders.component.OrderCard.kt</ID>
+  </CurrentIssues>
+</SmellBaseline>

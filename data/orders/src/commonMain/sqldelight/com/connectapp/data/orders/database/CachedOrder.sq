@@ -1,0 +1,19 @@
+CREATE TABLE CachedOrderEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL,
+    date TEXT NOT NULL,
+    fetchedAt INTEGER NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM CachedOrderEntity
+ORDER BY fetchedAt DESC, id;
+
+insertOrder:
+INSERT INTO CachedOrderEntity(id, title, status, date, fetchedAt)
+VALUES (?, ?, ?, ?, ?);
+
+clear:
+DELETE FROM CachedOrderEntity;

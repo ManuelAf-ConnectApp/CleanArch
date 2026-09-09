@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application>
+        <!--
+             Auto-captures the host app's Context (and, via ActivityLifecycleCallbacks, the
+             foreground Activity) needed to check/request the notification permission, without
+             requiring the app module to wire anything through Koin/MainActivity. Same pattern as
+             com.connectapp.core.storage.KVaultContextInitializer /
+             com.connectapp.core.analytics.AnalyticsContextInitializer. See
+             com.connectapp.core.notifications.NotificationPermissionContextInitializer.
+        -->
+        <provider
+            android:name="com.connectapp.core.notifications.NotificationPermissionContextInitializer"
+            android:authorities="${applicationId}.connectapp.core.notifications.context-initializer"
+            android:exported="false" />
+    </application>
+
+</manifest>

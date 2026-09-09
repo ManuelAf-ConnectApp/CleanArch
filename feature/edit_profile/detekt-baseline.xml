@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>PackageName:EditProfileEffect.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageName:EditProfileIntent.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageName:EditProfileModule.kt$package com.connectapp.presentation.edit_profile.di</ID>
+    <ID>PackageName:EditProfileScreen.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageName:EditProfileState.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageName:EditProfileViewModel.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageNaming:EditProfileEffect.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageNaming:EditProfileIntent.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageNaming:EditProfileModule.kt$package com.connectapp.presentation.edit_profile.di</ID>
+    <ID>PackageNaming:EditProfileScreen.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageNaming:EditProfileState.kt$package com.connectapp.presentation.edit_profile</ID>
+    <ID>PackageNaming:EditProfileViewModel.kt$package com.connectapp.presentation.edit_profile</ID>
+  </CurrentIssues>
+</SmellBaseline>

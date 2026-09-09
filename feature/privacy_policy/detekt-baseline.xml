@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>PackageName:PrivacyPolicyScreen.kt$package com.connectapp.presentation.privacy_policy</ID>
+    <ID>PackageNaming:PrivacyPolicyScreen.kt$package com.connectapp.presentation.privacy_policy</ID>
+  </CurrentIssues>
+</SmellBaseline>
