@@ -172,7 +172,7 @@ class SettingsViewModelTest {
     // switch must not flip the state to false — it would show the toggle as off while
     // notifications stay actually enabled.
     @Test
-    fun `NotificationsToggled(false) leaves the state untouched`() {
+    fun `notifications disabled leaves the state untouched`() {
         val viewModel = viewModel()
 
         viewModel.onIntent(SettingsIntent.NotificationsToggled(false))
@@ -276,7 +276,7 @@ class SettingsViewModelTest {
 
     // Nothing is actually being disabled (FR-006), so there's nothing new to persist.
     @Test
-    fun `NotificationsToggled(false) does not write to SettingsRepository`() = runTest {
+    fun `notifications disabled does not write to SettingsRepository`() = runTest {
         val settingsRepository = FakeSettingsRepository()
         val viewModel = viewModel(settingsRepository = settingsRepository)
         advanceUntilIdle() // let init's own refreshNotificationsState() (US3) settle first
@@ -290,7 +290,7 @@ class SettingsViewModelTest {
 
     // specs/015-notification-permissions US1: activating the toggle defers to the real OS permission.
     @Test
-    fun `NotificationsToggled(true) with GRANTED status activates immediately without requesting`() = runTest {
+    fun `notifications enabled with granted status activates immediately without requesting`() = runTest {
         val notificationPermissionProvider =
             FakeNotificationPermissionProvider(status = NotificationPermissionStatus.GRANTED)
         val viewModel = viewModel(notificationPermissionProvider = notificationPermissionProvider)
@@ -303,7 +303,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `NotificationsToggled(true) with DENIABLE status requests permission and reflects acceptance`() = runTest {
+    fun `notifications enabled with deniable status requests permission and reflects acceptance`() = runTest {
         val notificationPermissionProvider = FakeNotificationPermissionProvider(
             status = NotificationPermissionStatus.DENIABLE,
             requestResult = NotificationPermissionStatus.GRANTED,
@@ -318,7 +318,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `NotificationsToggled(true) with DENIABLE status requests permission and reflects rejection`() = runTest {
+    fun `notifications enabled with deniable status requests permission and reflects rejection`() = runTest {
         val notificationPermissionProvider = FakeNotificationPermissionProvider(
             status = NotificationPermissionStatus.DENIABLE,
             requestResult = NotificationPermissionStatus.DENIABLE,
@@ -334,7 +334,7 @@ class SettingsViewModelTest {
 
     // specs/015-notification-permissions US2: the OS won't show its dialog again — go to Settings instead.
     @Test
-    fun `NotificationsToggled(true) with PERMANENTLY_DENIED status opens app settings without requesting`() = runTest {
+    fun `notifications enabled with permanently denied status opens app settings without requesting`() = runTest {
         val notificationPermissionProvider =
             FakeNotificationPermissionProvider(status = NotificationPermissionStatus.PERMANENTLY_DENIED)
         val viewModel = viewModel(notificationPermissionProvider = notificationPermissionProvider)
@@ -349,7 +349,7 @@ class SettingsViewModelTest {
 
     // specs/015-notification-permissions US4: disabling never touches the OS permission (FR-006).
     @Test
-    fun `NotificationsToggled(false) never calls NotificationPermissionProvider`() = runTest {
+    fun `notifications disabled never calls NotificationPermissionProvider`() = runTest {
         val notificationPermissionProvider = FakeNotificationPermissionProvider()
         val viewModel = viewModel(notificationPermissionProvider = notificationPermissionProvider)
         advanceUntilIdle() // let init's own refreshNotificationsState() (US3) settle first
@@ -367,7 +367,7 @@ class SettingsViewModelTest {
     // The toggle can never actually revoke the OS permission (FR-006), so disabling it must warn
     // the user that the OS Settings screen is the only real way to do that.
     @Test
-    fun `NotificationsToggled(false) emits ShowNotificationsDisabledNotice`() = runTest {
+    fun `notifications disabled emits ShowNotificationsDisabledNotice`() = runTest {
         val viewModel = viewModel()
         val effects = mutableListOf<SettingsEffect>()
         val job = launch { viewModel.effect.toList(effects) }
@@ -380,7 +380,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `NotificationsToggled(true) does not emit ShowNotificationsDisabledNotice`() = runTest {
+    fun `notifications enabled does not emit ShowNotificationsDisabledNotice`() = runTest {
         val notificationPermissionProvider =
             FakeNotificationPermissionProvider(status = NotificationPermissionStatus.GRANTED)
         val viewModel = viewModel(notificationPermissionProvider = notificationPermissionProvider)
