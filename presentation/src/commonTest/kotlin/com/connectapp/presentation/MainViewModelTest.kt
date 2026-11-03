@@ -194,7 +194,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `onNotificationBellClicked with a permanently denied permission opens OS app settings, never navigates`() =
+    fun `onNotificationBellClicked with a permanently denied permission opens OS app settings and never navigates`() =
         runTest {
             val provider = FakeNotificationPermissionProvider(status = NotificationPermissionStatus.PERMANENTLY_DENIED)
             val settingsRepository = FakeSettingsRepository()
