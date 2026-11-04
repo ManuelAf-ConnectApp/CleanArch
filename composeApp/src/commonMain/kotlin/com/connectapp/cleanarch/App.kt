@@ -24,20 +24,27 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.startKoin
 
+private var koinInitialized = false
+
+/**
+ * Initializes the dependency graph once per process, before composition starts. Keeping this out
+ * of [App] prevents recompositions from rebuilding global DI state.
+ */
+fun initKoin() {
+    if (!koinInitialized) {
+        startKoin { modules(appModules) }
+        koinInitialized = true
+    }
+}
+
 @Composable
 fun App() {
-    // specs/007-persist-apply-appearance-notifications: startKoin must run before the first
-    // koinViewModel() call below, and now lives outside ConnectAppTheme so the persisted dark
-    // mode preference (read via MainViewModel) is available before the theme itself is applied.
-    startKoin {
-        modules(appModules)
-    }
-
     val viewModel: MainViewModel = koinViewModel()
     val darkModeEnabled by viewModel.darkModeEnabled.collectAsState()
 
     ConnectAppTheme(darkTheme = darkModeEnabled ?: isSystemInDarkTheme()) {
         MainScreen(
+            viewModel = viewModel,
             entryProvider = appEntryProvider(modifier = Modifier, viewModel = viewModel)
         )
     }
@@ -46,5 +53,6 @@ fun App() {
 @Preview
 @Composable
 fun AppPreview() {
+    initKoin()
     App()
 }

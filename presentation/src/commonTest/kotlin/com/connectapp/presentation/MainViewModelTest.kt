@@ -123,6 +123,18 @@ class MainViewModelTest {
     }
 
     @Test
+    fun `back stack is owned by the ViewModel and pops to its previous route`() {
+        val viewModel = viewModel()
+
+        viewModel.updateNavigationState(NavigationRoute.LoginRoute)
+        viewModel.updateNavigationState(NavigationRoute.RegisterRoute)
+        viewModel.onBack()
+
+        assertEquals(listOf(NavigationRoute.LoginRoute), viewModel.backStack.value)
+        assertEquals(NavigationRoute.LoginRoute, viewModel.navState.value.route)
+    }
+
+    @Test
     fun `showSnackBar populates the snack bar state`() {
         val viewModel = viewModel()
 

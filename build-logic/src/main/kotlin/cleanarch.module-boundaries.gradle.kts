@@ -18,7 +18,6 @@ val verifyModuleBoundaries = tasks.register<VerifyModuleBoundaries>("verifyModul
 // reference, keeping this configuration-cache-safe.
 gradle.projectsEvaluated {
     val edges = subprojects
-        .filterNot { it.path == ":composeApp" }
         .associate { subproject ->
             val projectDeps = mutableSetOf<String>()
             subproject.configurations

@@ -36,7 +36,6 @@ import com.connectapp.presentation.navigation.NavigationScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 
 // iOS-only: androidx.navigation3's default NavDisplay transitions get hard-cut to zero duration
 // when the OS "Reduce Motion" accessibility setting is on (JetBrains YouTrack CMP-10284), which
@@ -53,9 +52,9 @@ private const val SNACKBAR_AUTO_DISMISS_MILLIS = 5_000L
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    viewModel: MainViewModel,
     entryProvider: (Any) -> NavEntry<out Any>,
 ) {
-    val viewModel: MainViewModel = koinViewModel()
     val navState by viewModel.navState.collectAsStateWithLifecycle()
     val snackBarState by viewModel.snackBarState.collectAsStateWithLifecycle()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsStateWithLifecycle()

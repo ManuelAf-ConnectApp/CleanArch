@@ -8,9 +8,7 @@ import com.connectapp.domain.analytics.KeyFlow
 import com.connectapp.domain.model.AuthError
 import com.connectapp.domain.model.User
 import com.connectapp.domain.usecase.LoginUseCase
-import com.connectapp.domain.usecase.SetSessionRememberedUseCase
 import com.connectapp.domain.usecase.TrackFlowEventUseCase
-import com.connectapp.domain.usecase.UpdateProfileUseCase
 import com.connectapp.presentation.login.fake.FakeAuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,8 +61,6 @@ class LoginViewModelTest {
     ) = LoginViewModel(
         LoginUseCase(repository),
         TrackFlowEventUseCase(analyticsReporter),
-        UpdateProfileUseCase(repository),
-        SetSessionRememberedUseCase(repository),
     )
 
     @Test
@@ -87,29 +83,6 @@ class LoginViewModelTest {
             listOf<Triple<KeyFlow, FlowOutcome, FailureCategory?>>(Triple(KeyFlow.LOGIN, FlowOutcome.SUCCESS, null)),
             analyticsReporter.trackedEvents,
         )
-        job.cancel()
-    }
-
-    @Test
-    fun `LoginClicked with the dev admin credentials logs in and seeds a profile without calling login`() = runTest {
-        val analyticsReporter = FakeAnalyticsReporter()
-        // loginResult is a failure here on purpose: if the dev bypass ever regressed into
-        // calling login(), this test would then see isLoggedIn == false and fail.
-        val repository = FakeAuthRepository(loginResult = Result.failure(AuthError.InvalidCredentials))
-        val viewModel = viewModel(repository, analyticsReporter)
-        val effects = mutableListOf<LoginEffect>()
-        val job = launch { viewModel.effect.toList(effects) }
-
-        viewModel.onIntent(LoginIntent.EmailChanged("admin@admin.com"))
-        viewModel.onIntent(LoginIntent.PasswordChanged("Admin@2026"))
-        viewModel.onIntent(LoginIntent.LoginClicked)
-        advanceUntilIdle()
-
-        assertTrue(viewModel.state.value.isLoggedIn)
-        assertFalse(viewModel.state.value.isLoading)
-        assertTrue(effects.any { it is LoginEffect.NavigateToHome })
-        assertTrue(analyticsReporter.trackedEvents.isEmpty())
-        assertEquals("admin@admin.com", repository.lastUpdatedProfile?.email)
         job.cancel()
     }
 
@@ -170,34 +143,4 @@ class LoginViewModelTest {
         assertEquals(false, repository.lastRememberSessionArg)
     }
 
-    // The dev bypass never calls AuthRepository.login() (no network involved), so it must apply
-    // the checkbox itself via SetSessionRememberedUseCase to honor the same preference.
-    @Test
-    fun `dev admin bypass with remember session checked persists a session marker for the dev email`() = runTest {
-        val repository = FakeAuthRepository(loginResult = Result.failure(AuthError.InvalidCredentials))
-        val viewModel = viewModel(repository, FakeAnalyticsReporter())
-        viewModel.onIntent(LoginIntent.EmailChanged("admin@admin.com"))
-        viewModel.onIntent(LoginIntent.PasswordChanged("Admin@2026"))
-        viewModel.onIntent(LoginIntent.RememberSessionToggled(true))
-
-        viewModel.onIntent(LoginIntent.LoginClicked)
-        advanceUntilIdle()
-
-        assertEquals("admin@admin.com", repository.lastRememberedEmail)
-        assertEquals(0, repository.clearRememberedSessionCallCount)
-    }
-
-    @Test
-    fun `dev admin bypass without remember session checked clears any session marker`() = runTest {
-        val repository = FakeAuthRepository(loginResult = Result.failure(AuthError.InvalidCredentials))
-        val viewModel = viewModel(repository, FakeAnalyticsReporter())
-        viewModel.onIntent(LoginIntent.EmailChanged("admin@admin.com"))
-        viewModel.onIntent(LoginIntent.PasswordChanged("Admin@2026"))
-
-        viewModel.onIntent(LoginIntent.LoginClicked)
-        advanceUntilIdle()
-
-        assertEquals(1, repository.clearRememberedSessionCallCount)
-        assertEquals(null, repository.lastRememberedEmail)
-    }
 }

@@ -41,8 +41,8 @@ Cross-feature navigation (`NavigationRoute`/`NavigationScreen`) and the top-leve
 ### 6. `:commonResources`
 Shared strings and design tokens (`TokenResources`), consumed by every `feature:*` module and `presentation`.
 
-### 7. `:composeApp` (Platform Entry Points)
-The only module allowed to depend on anything else in the graph: wires every `data:*`/`feature:*` Koin module together (`di.kt`), and hosts the Android `Activity`/iOS `ViewController` entry points.
+### 7. `:composeApp` and `:androidApp` (Platform Entry Points)
+`:composeApp` is the KMP shared application module and the only composition root: it wires every `data:*`/`feature:*` Koin module together and exposes the iOS framework. `:androidApp` depends only on it and is the Android-only launcher, hosting the `Activity`, manifest, versioning and Android bundle.
 
 ### Module Boundaries & Dependency Graph
 
@@ -100,8 +100,15 @@ Set these via `gradle.properties`, `-P<key>=...`, or the matching environment va
 
 | Property | Env var | Required | Purpose |
 |---|---|---|---|
-| `connectapp.authApiBaseUrl` | `CONNECTAPP_AUTH_API_BASE_URL` | Yes (build fails without it) | Backend base URL for the auth API. |
-| `connectapp.sentryDsn` | `CONNECTAPP_SENTRY_DSN` | No (Sentry stays uninitialized without it) | DSN for crash/analytics reporting — see `specs/011-crash-analytics-reporting/quickstart.md`. |
+| `connectapp.environment` | — | No (`debug`) | Selected environment: `debug`, `staging` or `release`. |
+| `connectapp.authApiBaseUrl.<environment>` | `CONNECTAPP_AUTH_API_BASE_URL` | Yes | Environment-specific backend base URL; generic `connectapp.authApiBaseUrl` remains a fallback. |
+| `connectapp.sentryDsn.<environment>` | `CONNECTAPP_SENTRY_DSN` | No (Sentry stays uninitialized without it) | Environment-specific DSN for crash/analytics reporting; generic `connectapp.sentryDsn` remains a fallback. |
+
+Select the environment explicitly when its build variant is not `debug`; for example:
+
+```shell
+./gradlew :androidApp:assembleStaging -Pconnectapp.environment=staging
+```
 
 ### Releasing
 
@@ -123,10 +130,10 @@ Without these, the corresponding release job fails immediately with a message na
 ### Build and Run
 
 #### Android
-- From Android Studio: Select the `composeApp` run configuration.
+- From Android Studio: Select the `androidApp` run configuration.
 - From Terminal:
   ```shell
-  ./gradlew :composeApp:assembleDebug
+  ./gradlew :androidApp:assembleDebug
   ```
 
 #### iOS
