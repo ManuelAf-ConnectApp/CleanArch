@@ -32,7 +32,7 @@ fun classify(path: String): ModuleLayer = when {
     path.startsWith(":feature:") -> ModuleLayer.FEATURE
     path == ":presentation" -> ModuleLayer.PRESENTATION
     path == ":commonResources" -> ModuleLayer.COMMON_RESOURCES
-    path == ":composeApp" -> ModuleLayer.APP
+    path == ":composeApp" || path == ":androidApp" -> ModuleLayer.APP
     else -> error(
         "Unclassified module path: '$path' — add it to cleanarch.convention.classify() " +
             "in build-logic/src/main/kotlin/cleanarch/convention/ModuleBoundaries.kt " +

@@ -1,8 +1,5 @@
 package com.connectapp.presentation.navigation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,19 +19,11 @@ fun NavigationScreen(
     entryProvider: (Any) -> NavEntry<out Any>,
 ) {
     val backStack = remember { mutableStateListOf<Any>(NavigationRoute.SplashRoute) }
+    val viewModelBackStack by viewModel.backStack.collectAsState()
 
-    val navState by viewModel.navState.collectAsState()
-
-    LaunchedEffect(navState.route) {
-        val newRoute = navState.route
-        if (backStack.lastOrNull() != newRoute) {
-            if (newRoute == NavigationRoute.HomeRoute || newRoute == NavigationRoute.SplashRoute) {
-                backStack.clear()
-                backStack.add(newRoute)
-            } else {
-                backStack.add(newRoute)
-            }
-        }
+    LaunchedEffect(viewModelBackStack) {
+        backStack.clear()
+        backStack.addAll(viewModelBackStack)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -43,14 +32,7 @@ fun NavigationScreen(
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
-        onBack = {
-            if (backStack.size > 1) {
-                backStack.removeAt(backStack.lastIndex)
-                // Al volver atrás, informamos al ViewModel para que la UI (BottomBar) se actualice
-                val previousRoute = backStack.last() as NavigationRoute
-                viewModel.updateNavigationState(previousRoute)
-            }
-        },
+        onBack = viewModel::onBack,
         entryProvider = typedEntryProvider
     )
 

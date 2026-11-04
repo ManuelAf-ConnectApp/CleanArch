@@ -34,6 +34,7 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":androidApp")
 include(":domain:auth")
 include(":domain:orders")
 include(":domain:settings")

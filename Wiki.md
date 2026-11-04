@@ -79,10 +79,11 @@ directamente de ningún `data:*`.
 Strings y design tokens compartidos (`TokenResources`), consumidos por cada `feature:*` y por
 `presentation`.
 
-### 7. `:composeApp` — puntos de entrada de plataforma
-El único módulo que puede depender de cualquier otra cosa del grafo: conecta cada módulo Koin
-de `data:*`/`feature:*` (`di.kt`), y aloja los puntos de entrada `Activity` (Android) /
-`ViewController` (iOS).
+### 7. `:composeApp` y `:androidApp` — puntos de entrada de plataforma
+
+`:composeApp` conserva la composición KMP, conecta cada módulo Koin de `data:*`/`feature:*`
+(`di.kt`) y expone el framework iOS con su `ViewController`. `:androidApp` es el launcher Android
+con el `Activity`, manifest y empaquetado, y solo depende de `:composeApp`.
 
 ## Módulos y grafo de dependencias
 
@@ -152,14 +153,21 @@ commitear valores reales:
 
 | Propiedad | Variable de entorno | Obligatoria | Propósito |
 |---|---|---|---|
-| `connectapp.authApiBaseUrl` | `CONNECTAPP_AUTH_API_BASE_URL` | Sí (el build falla sin ella) | URL base del backend para la API de auth. |
-| `connectapp.sentryDsn` | `CONNECTAPP_SENTRY_DSN` | No (Sentry queda sin inicializar sin ella) | DSN para crash/analítica — ver `specs/011-crash-analytics-reporting/quickstart.md`. |
+| `connectapp.environment` | — | No (`debug`) | Entorno activo: `debug`, `staging` o `release`. |
+| `connectapp.authApiBaseUrl.<entorno>` | `CONNECTAPP_AUTH_API_BASE_URL` | Sí | URL base específica del backend; `connectapp.authApiBaseUrl` se mantiene como alternativa genérica. |
+| `connectapp.sentryDsn.<entorno>` | `CONNECTAPP_SENTRY_DSN` | No (Sentry queda sin inicializar sin ella) | DSN específico por entorno para crash/analítica; `connectapp.sentryDsn` se mantiene como alternativa genérica. |
+
+Indica el entorno de forma explícita al generar una variante distinta de `debug`:
+
+```shell
+./gradlew :androidApp:assembleStaging -Pconnectapp.environment=staging
+```
 
 ### Build y ejecución
 
-**Android** — desde Android Studio, configuración de ejecución `composeApp`; o por terminal:
+**Android** — desde Android Studio, configuración de ejecución `androidApp`; o por terminal:
 ```shell
-./gradlew :composeApp:assembleDebug
+./gradlew :androidApp:assembleDebug
 ```
 
 **iOS** — abre el directorio `iosApp` en Xcode y ejecuta el proyecto (usa el Run Script

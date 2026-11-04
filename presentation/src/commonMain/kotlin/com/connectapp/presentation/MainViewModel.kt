@@ -24,6 +24,11 @@ class MainViewModel(
     private val _navState = MutableStateFlow(NavigationState(route = NavigationRoute.SplashRoute))
     val navState: StateFlow<NavigationState> get() = _navState
 
+    // Navigation3 renders this state but never owns it. Keeping the stack in the ViewModel
+    // makes toolbar back, system back and programmatic navigation deterministic.
+    private val _backStack = MutableStateFlow(listOf<NavigationRoute>(NavigationRoute.SplashRoute))
+    val backStack: StateFlow<List<NavigationRoute>> get() = _backStack
+
     private val _snackBarState = MutableStateFlow<SnackBarState?>(null)
     val snackBarState: StateFlow<SnackBarState?> get() = _snackBarState
 
@@ -46,11 +51,23 @@ class MainViewModel(
     }
 
     fun updateNavigationState(navRoute: NavigationRoute) {
-        _navState.update {
-            it.copy(route = navRoute)
+        val currentStack = _backStack.value
+        val nextStack = when (navRoute) {
+            NavigationRoute.SplashRoute,
+            NavigationRoute.LoginRoute,
+            NavigationRoute.HomeRoute -> listOf(navRoute)
+
+            else -> if (currentStack.lastOrNull() == navRoute) currentStack else currentStack + navRoute
         }
+        publishNavigation(nextStack)
+    }
+
+    private fun publishNavigation(nextStack: List<NavigationRoute>) {
+        val route = nextStack.last()
+        _backStack.value = nextStack
+        _navState.value = NavigationState(route)
         // FR-002: breadcrumb so a crash report includes which screen the user was in.
-        analyticsReporter.setCurrentScreen(navRoute::class.simpleName ?: "Unknown")
+        analyticsReporter.setCurrentScreen(route::class.simpleName ?: "Unknown")
     }
 
     fun showSnackBar(message: String, actionLabel: String? = null, onAction: (() -> Unit)? = null) {
@@ -109,23 +126,28 @@ class MainViewModel(
     }
 
     fun onBack() {
-        when (navState.value.route) {
+        val currentStack = _backStack.value
+        if (currentStack.size > 1) {
+            publishNavigation(currentStack.dropLast(1))
+            return
+        }
+
+        val fallback = when (navState.value.route) {
             NavigationRoute.ForgotPasswordRoute, NavigationRoute.RegisterRoute -> {
-                updateNavigationState(NavigationRoute.LoginRoute)
+                NavigationRoute.LoginRoute
             }
             // specs/009-order-detail-and-refresh FR-003: back from the detail returns to the
             // orders list specifically, not the generic Home fallback below.
             is NavigationRoute.OrderDetailRoute -> {
-                updateNavigationState(NavigationRoute.OrdersRoute)
+                NavigationRoute.OrdersRoute
             }
             // specs/008-complete-edit-profile-privacy: both are only reachable from Settings,
             // so back returns there specifically, not the generic Home fallback below.
             NavigationRoute.EditProfileRoute, NavigationRoute.PrivacyPolicyRoute -> {
-                updateNavigationState(NavigationRoute.SettingsRoute)
+                NavigationRoute.SettingsRoute
             }
-           else ->{
-               updateNavigationState(NavigationRoute.HomeRoute)
-           }
+            else -> NavigationRoute.HomeRoute
         }
+        updateNavigationState(fallback)
     }
 }

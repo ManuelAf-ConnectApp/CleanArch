@@ -28,7 +28,9 @@ jobs:
           java-version: '21'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        # v4 currently resolves to an object GitHub's codeload endpoint no longer serves,
+        # aborting the job before Gradle starts. Keep this on the supported major.
+        uses: gradle/actions/setup-gradle@v5
 
       # Builds every module buildable on Linux (Android targets + JVM/common code),
       # runs lint and host unit tests. iOS native compile tasks are automatically
@@ -72,7 +74,7 @@ jobs:
           java-version: '21'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # Compiles the iosArm64/iosSimulatorArm64 Kotlin/Native targets for every KMP
       # module. Uses the simulator arm64 framework link task (no code signing needed)
@@ -146,7 +148,7 @@ jobs:
           java-version: '21'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # research.md D4 (FR-006): fail with a message naming the missing secret, before ever
       # invoking Gradle/jarsigner with an incomplete signing config.
@@ -173,7 +175,7 @@ jobs:
         run: echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
 
       # AGP's injected signing properties (android.injected.signing.*) sign the release
-      # bundle without needing a custom signingConfig block in composeApp/build.gradle.kts —
+      # bundle without needing a custom signingConfig block in androidApp/build.gradle.kts —
       # nothing about the keystore/passwords ever touches a Gradle file. Passed via env: (not
       # interpolated directly into the command) so a password containing shell metacharacters
       # can't corrupt the invocation.
@@ -183,7 +185,8 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          ./gradlew :composeApp:bundleRelease --stacktrace \
+          ./gradlew :androidApp:bundleRelease --stacktrace \
+            -Pconnectapp.environment=release \
             -PreleaseVersionName=${{ needs.release-version.outputs.versionName }} \
             -PreleaseVersionCode=${{ needs.release-version.outputs.versionCode }} \
             -Pandroid.injected.signing.store.file="$RUNNER_TEMP/release.keystore" \
@@ -199,7 +202,7 @@ jobs:
             gh release create "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" \
               --title "${GITHUB_REF_NAME}" --generate-notes || true
           gh release upload "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --clobber \
-            composeApp/build/outputs/bundle/release/composeApp-release.aab
+            androidApp/build/outputs/bundle/release/androidApp-release.aab
 
   release-ios:
     name: Release — iOS (TestFlight-ready archive)
@@ -218,7 +221,7 @@ jobs:
           java-version: '21'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # research.md D4 (FR-006): same guarantee as release-android, iOS side.
       - name: Verify iOS signing secrets are configured
@@ -277,6 +280,7 @@ jobs:
       - name: Archive
         env:
           IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+          CONNECTAPP_ENVIRONMENT: release
         run: |
           xcodebuild archive \
             -project iosApp/iosApp.xcodeproj \
