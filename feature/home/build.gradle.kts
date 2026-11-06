@@ -1,5 +1,5 @@
 plugins {
-    id("cleanarch.kmp.compose")
+    id("restaurantapp.kmp.compose")
 }
 
 kotlin {
@@ -15,6 +15,7 @@ kotlin {
             implementation(libs.navigation3.runtime)
             implementation(projects.commonResources)
             implementation(projects.core.mvi)
+            implementation(projects.domain.bookings)
         }
     }
 }

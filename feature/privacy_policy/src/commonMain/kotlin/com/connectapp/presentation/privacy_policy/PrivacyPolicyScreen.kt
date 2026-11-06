@@ -15,7 +15,7 @@ import org.jetbrains.compose.resources.stringResource
 
 /**
  * Static content, no ViewModel (specs/008-complete-edit-profile-privacy/research.md D2's
- * companion decision, same YAGNI reasoning as OrderDetailScreen in 009): this screen has no
+ * companion decision, same YAGNI reasoning as BookingDetailScreen in 009): this screen has no
  * state and no domain/data dependency, so a ViewModel would be pure boilerplate.
  *
  * No local back button: the app shell's `CustomTopBar` already renders one for every route with

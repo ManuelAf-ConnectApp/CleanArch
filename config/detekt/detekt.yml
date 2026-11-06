@@ -1,14 +1,14 @@
-# Configuración única de detekt para todo el proyecto CleanArch/ConnectApp
+# Configuración única de detekt para todo el proyecto RestaurantApp/ConnectApp
 # (specs/005-static-analysis-ci). Ningún módulo declara su propio detekt.yml ni reglas
 # inline en su build.gradle.kts, salvo la ruta `baseline`, que es propia de cada módulo.
 #
-# Cobertura: se aplica vía `cleanarch.kmp.base.gradle.kts`, que cubre :domain, :presentation,
+# Cobertura: se aplica vía `restaurantapp.kmp.base.gradle.kts`, que cubre :domain, :presentation,
 # :commonResources, core:*, data:*, y los feature/*; más una aplicación puntual en
 # composeApp/build.gradle.kts y build-logic/build.gradle.kts, los dos únicos puntos de
 # compilación que no heredan esa convención (ver contracts/detekt-config-contract.md).
 #
 # Un módulo Gradle nuevo queda cubierto automáticamente si aplica el plugin
-# `cleanarch.kmp.base`. Si no lo aplica (como composeApp/build-logic), debe declarar
+# `restaurantapp.kmp.base`. Si no lo aplica (como composeApp/build-logic), debe declarar
 # `id("io.gitlab.arturbosch.detekt")` explícitamente y apuntar su `config.setFrom` a este
 # mismo fichero -- nunca a una copia propia.
 #

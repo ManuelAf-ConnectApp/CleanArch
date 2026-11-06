@@ -1,7 +1,7 @@
 package com.connectapp.domain.usecase
 
 import com.connectapp.domain.repository.AuthRepository
-import com.connectapp.domain.repository.OrdersRepository
+import com.connectapp.domain.repository.BookingsRepository
 
 /**
  * The only place in `domain` that knows "logging out" touches more than one repository's cache —
@@ -10,7 +10,7 @@ import com.connectapp.domain.repository.OrdersRepository
  */
 class LogoutUseCase(
     private val authRepository: AuthRepository,
-    private val ordersRepository: OrdersRepository,
+    private val ordersRepository: BookingsRepository,
 ) {
     suspend operator fun invoke() {
         authRepository.logout()

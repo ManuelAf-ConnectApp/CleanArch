@@ -1,9 +1,9 @@
 package com.connectapp.presentation.profile
 
-import com.connectapp.domain.model.Order
+import com.connectapp.domain.model.Booking
 import com.connectapp.domain.model.User
 import com.connectapp.domain.repository.AuthRepository
-import com.connectapp.domain.repository.OrdersRepository
+import com.connectapp.domain.repository.BookingsRepository
 import com.connectapp.domain.usecase.LogoutUseCase
 import com.connectapp.domain.usecase.ObserveProfileFetchedAtUseCase
 import com.connectapp.domain.usecase.ObserveProfileUseCase
@@ -55,12 +55,12 @@ private class FakeAuthRepository(user: User?) : AuthRepository {
 }
 
 /** ProfileViewModel doesn't read orders directly, but LogoutUseCase needs one to clear. */
-private class FakeOrdersRepository : OrdersRepository {
+private class FakeBookingsRepository : BookingsRepository {
     var clearCacheCallCount: Int = 0
         private set
 
-    override fun observeOrders(): Flow<List<Order>> = MutableStateFlow(emptyList())
-    override suspend fun refreshOrders(): Result<Unit> = Result.success(Unit)
+    override fun observeBookings(): Flow<List<Booking>> = MutableStateFlow(emptyList())
+    override suspend fun refreshBookings(): Result<Unit> = Result.success(Unit)
     override suspend fun clearCache() {
         clearCacheCallCount++
     }
@@ -87,7 +87,7 @@ class ProfileViewModelTest {
 
     private fun viewModel(
         authRepository: FakeAuthRepository = FakeAuthRepository(SAMPLE_USER),
-        ordersRepository: FakeOrdersRepository = FakeOrdersRepository(),
+        ordersRepository: FakeBookingsRepository = FakeBookingsRepository(),
     ) = ProfileViewModel(
         ObserveProfileUseCase(authRepository),
         LogoutUseCase(authRepository, ordersRepository),
@@ -108,7 +108,7 @@ class ProfileViewModelTest {
     @Test
     fun `LogoutClicked invokes LogoutUseCase clears loading and emits NavigateToLogin`() = runTest {
         val authRepository = FakeAuthRepository(SAMPLE_USER)
-        val ordersRepository = FakeOrdersRepository()
+        val ordersRepository = FakeBookingsRepository()
         val viewModel = viewModel(authRepository, ordersRepository)
         advanceUntilIdle()
         val effects = mutableListOf<ProfileEffect>()

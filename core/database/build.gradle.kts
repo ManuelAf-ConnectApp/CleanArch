@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    id("cleanarch.kmp.base")
+    id("restaurantapp.kmp.base")
 }
 
 kotlin {
     // SQLDelight's native-driver (touchlab/sqliter) links against the system libsqlite3 dylib;
     // Kotlin/Native doesn't add it automatically when this module's own iOS framework is linked
-    // standalone (as every module here does, per cleanarch.kmp.base.gradle.kts) — without this,
+    // standalone (as every module here does, per restaurantapp.kmp.base.gradle.kts) — without this,
     // linkDebugFrameworkIosArm64/-SimulatorArm64 fail with "Undefined symbols: _sqlite3_bind_*".
     targets.withType<KotlinNativeTarget>().configureEach {
         binaries.withType<Framework>().configureEach {

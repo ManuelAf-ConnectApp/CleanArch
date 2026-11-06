@@ -2,7 +2,7 @@ import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import org.gradle.kotlin.dsl.withType
 
 plugins {
-    id("cleanarch.kmp.compose")
+    id("restaurantapp.kmp.compose")
 }
 
 kotlin {

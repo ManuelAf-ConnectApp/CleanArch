@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    id("cleanarch.kmp.base")
+    id("restaurantapp.kmp.base")
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.sqldelight)
 }

@@ -1,5 +1,5 @@
 plugins {
-    id("cleanarch.kmp.base")
+    id("restaurantapp.kmp.base")
 }
 
 kotlin {
@@ -16,7 +16,7 @@ kotlin {
             // specs/010-offline-cache-layer/contracts/auth-repository-profile-logout-contract.md,
             // research.md D7 ("the only place in domain that knows logout touches more than one
             // repository's cache").
-            implementation(projects.domain.orders)
+            implementation(projects.domain.bookings)
         }
     }
 }

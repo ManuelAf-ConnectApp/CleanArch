@@ -1,17 +1,20 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeCompiler)
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.detekt)
 }
 
 val releaseVersionName = providers.gradleProperty("releaseVersionName").orNull ?: "1.0"
 
 android {
-    namespace = "com.connectapp.cleanarch"
+    namespace = "com.connectapp.restaurantapp"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.connectapp.cleanarch"
+        applicationId = "com.connectapp.restaurantapp"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = providers.gradleProperty("releaseVersionCode").orNull?.toIntOrNull() ?: 1
@@ -50,6 +53,12 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 

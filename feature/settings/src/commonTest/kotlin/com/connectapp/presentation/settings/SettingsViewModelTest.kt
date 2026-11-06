@@ -4,10 +4,10 @@ import com.connectapp.domain.analytics.AnalyticsReporter
 import com.connectapp.domain.analytics.FailureCategory
 import com.connectapp.domain.analytics.FlowOutcome
 import com.connectapp.domain.analytics.KeyFlow
-import com.connectapp.domain.model.Order
+import com.connectapp.domain.model.Booking
 import com.connectapp.domain.model.User
 import com.connectapp.domain.repository.AuthRepository
-import com.connectapp.domain.repository.OrdersRepository
+import com.connectapp.domain.repository.BookingsRepository
 import com.connectapp.domain.provider.AppVersionProvider
 import com.connectapp.domain.provider.NotificationPermissionProvider
 import com.connectapp.domain.provider.NotificationPermissionStatus
@@ -83,12 +83,12 @@ private class FakeSettingsRepository(
     }
 }
 
-private class FakeOrdersRepository : OrdersRepository {
+private class FakeBookingsRepository : BookingsRepository {
     var clearCacheCallCount: Int = 0
         private set
 
-    override fun observeOrders(): Flow<List<Order>> = MutableStateFlow(emptyList())
-    override suspend fun refreshOrders(): Result<Unit> = Result.success(Unit)
+    override fun observeBookings(): Flow<List<Booking>> = MutableStateFlow(emptyList())
+    override suspend fun refreshBookings(): Result<Unit> = Result.success(Unit)
     override suspend fun clearCache() {
         clearCacheCallCount++
     }
@@ -153,7 +153,7 @@ class SettingsViewModelTest {
 
     private fun viewModel(
         authRepository: FakeAuthRepository = FakeAuthRepository(),
-        ordersRepository: FakeOrdersRepository = FakeOrdersRepository(),
+        ordersRepository: FakeBookingsRepository = FakeBookingsRepository(),
         analyticsReporter: FakeAnalyticsReporter = FakeAnalyticsReporter(),
         settingsRepository: FakeSettingsRepository = FakeSettingsRepository(),
         appVersionProvider: FakeAppVersionProvider = FakeAppVersionProvider(),
@@ -397,7 +397,7 @@ class SettingsViewModelTest {
     @Test
     fun `LogoutClicked invokes LogoutUseCase clears loading and emits NavigateToLogin`() = runTest {
         val authRepository = FakeAuthRepository()
-        val ordersRepository = FakeOrdersRepository()
+        val ordersRepository = FakeBookingsRepository()
         val viewModel = viewModel(authRepository, ordersRepository)
         val effects = mutableListOf<SettingsEffect>()
         val job = launch { viewModel.effect.toList(effects) }

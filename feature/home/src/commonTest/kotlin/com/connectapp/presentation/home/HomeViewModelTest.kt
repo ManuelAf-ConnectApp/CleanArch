@@ -12,6 +12,7 @@ import kotlinx.coroutines.test.setMain
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -30,16 +31,27 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `ItemClicked emits ShowToast for that item`() = runTest {
+    fun `RestaurantSelected emits an informational message`() = runTest {
         val viewModel = HomeViewModel()
         val effects = mutableListOf<HomeEffect>()
         val job = launch { viewModel.effect.toList(effects) }
-        val item = dashboardItems.first()
+        val restaurant = demoRestaurants.first()
 
-        viewModel.onIntent(HomeIntent.ItemClicked(item))
+        viewModel.onIntent(HomeIntent.RestaurantSelected(restaurant))
         advanceUntilIdle()
 
-        assertTrue(effects.any { it is HomeEffect.ShowToast && it.item == item })
+        assertTrue(effects.any { it is HomeEffect.NavigateToRestaurant && it.restaurantId == restaurant.id })
         job.cancel()
+    }
+
+    @Test
+    fun `filters match a cuisine and can be cleared`() {
+        val viewModel = HomeViewModel()
+
+        viewModel.onIntent(HomeIntent.CuisineSelected(Cuisine.ITALIAN))
+        assertEquals(listOf("Forno Verde"), viewModel.state.value.filteredRestaurants.map { it.name })
+
+        viewModel.onIntent(HomeIntent.ClearFilters)
+        assertEquals(demoRestaurants, viewModel.state.value.filteredRestaurants)
     }
 }

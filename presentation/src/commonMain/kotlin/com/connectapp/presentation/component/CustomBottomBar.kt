@@ -46,7 +46,7 @@ fun CustomBottomBar(
             label = nav_home
         ),
         BottomNavItem(
-            route = NavigationRoute.OrdersRoute,
+            route = NavigationRoute.BookingsRoute,
             icon = Icons.Default.ShoppingCart,
             label = nav_orders
         ),

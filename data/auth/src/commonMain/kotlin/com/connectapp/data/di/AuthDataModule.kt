@@ -7,6 +7,7 @@ import com.connectapp.core.storage.createKVault
 import com.connectapp.data.database.AuthDatabase
 import com.connectapp.data.datasource.AuthLocalDataSource
 import com.connectapp.data.datasource.AuthLocalDataSourceImpl
+import com.connectapp.data.datasource.MvpAuthRemoteDataSource
 import com.connectapp.data.datasource.AuthRemoteDataSource
 import com.connectapp.data.datasource.AuthRemoteDataSourceImpl
 import com.connectapp.data.datasource.ProfileLocalDataSource
@@ -29,11 +30,16 @@ private const val AUTH_DATABASE_NAME = "auth.db"
  * is passed in from composeApp's `AppConfig` (research.md D2) — this module never reads
  * `AppConfig` itself, since `:data:auth` cannot depend on `:composeApp`.
  */
-fun dataModule(authApiBaseUrl: String) = module {
+fun dataModule(
+    authApiBaseUrl: String,
+    useMockAuthentication: Boolean = false,
+) = module {
     single { createHttpClient(baseUrl = authApiBaseUrl) }
     single<NetworkInterceptor> { AuthInterceptor(get()) }
     single<AuthService> { AuthServiceImpl(get()) }
-    single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get(), get()) }
+    single<AuthRemoteDataSource> {
+        if (useMockAuthentication) MvpAuthRemoteDataSource() else AuthRemoteDataSourceImpl(get(), get())
+    }
     single<AuthLocalDataSource> { AuthLocalDataSourceImpl(createKVault(name = AUTH_SESSION_STORE_NAME)) }
     single { AuthDatabase(createSqlDriver(AuthDatabase.Schema, AUTH_DATABASE_NAME)) }
     single<ProfileLocalDataSource> { ProfileLocalDataSourceImpl(get()) }

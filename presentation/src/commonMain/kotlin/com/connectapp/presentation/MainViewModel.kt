@@ -138,8 +138,8 @@ class MainViewModel(
             }
             // specs/009-order-detail-and-refresh FR-003: back from the detail returns to the
             // orders list specifically, not the generic Home fallback below.
-            is NavigationRoute.OrderDetailRoute -> {
-                NavigationRoute.OrdersRoute
+            is NavigationRoute.BookingDetailRoute -> {
+                NavigationRoute.BookingsRoute
             }
             // specs/008-complete-edit-profile-privacy: both are only reachable from Settings,
             // so back returns there specifically, not the generic Home fallback below.

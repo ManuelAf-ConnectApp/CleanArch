@@ -1,0 +1,29 @@
+CREATE TABLE CachedOrderEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL,
+    date TEXT NOT NULL,
+    guests INTEGER NOT NULL,
+    totalCents INTEGER NOT NULL,
+    paymentMethod TEXT NOT NULL,
+    cancellationWindowHours INTEGER NOT NULL,
+    fetchedAt INTEGER NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM CachedOrderEntity
+ORDER BY fetchedAt DESC, id;
+
+insertOrder:
+INSERT OR REPLACE INTO CachedOrderEntity(
+    id, title, status, date, guests, totalCents, paymentMethod, cancellationWindowHours, fetchedAt
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+clear:
+DELETE FROM CachedOrderEntity;
+
+deleteById:
+DELETE FROM CachedOrderEntity
+WHERE id = ?;

@@ -16,7 +16,7 @@ plugins {
     alias(libs.plugins.androidLint) apply false
     alias(libs.plugins.detekt) apply false
     // specs/013-enforce-module-boundaries — applied here only (root project), not `apply false`.
-    id("cleanarch.module-boundaries")
+    id("restaurantapp.module-boundaries")
     // specs/014-code-coverage-tooling — applied here only (root project). Modules are added
     // as `kover(project(":..."))` dependencies below, never by applying this plugin in a
     // module's own build.gradle.kts (contracts/kover-config-contract.md).
@@ -35,7 +35,7 @@ kover {
                     "*.generated.resources.*",
                     "com.connectapp.commonresources.resources.*",
                     "com.connectapp.data.database.*",
-                    "com.connectapp.data.orders.database.*",
+                    "com.connectapp.data.bookings.database.*",
                 )
             }
         }
@@ -49,7 +49,7 @@ kover {
 // code (research.md D3).
 dependencies {
     kover(project(":domain:auth"))
-    kover(project(":domain:orders"))
+    kover(project(":domain:bookings"))
     kover(project(":domain:settings"))
     kover(project(":domain:analytics"))
     kover(project(":presentation"))
@@ -62,7 +62,7 @@ dependencies {
     kover(project(":core:analytics"))
     kover(project(":core:notifications"))
     kover(project(":data:auth"))
-    kover(project(":data:orders"))
+    kover(project(":data:bookings"))
     kover(project(":data:settings"))
     kover(project(":data:analytics"))
     kover(project(":feature:splash"))
@@ -72,7 +72,7 @@ dependencies {
     kover(project(":feature:home"))
     kover(project(":feature:settings"))
     kover(project(":feature:profile"))
-    kover(project(":feature:orders"))
+    kover(project(":feature:bookings"))
     kover(project(":feature:edit_profile"))
     kover(project(":feature:privacy_policy"))
 }

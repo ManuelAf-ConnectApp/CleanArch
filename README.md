@@ -1,6 +1,6 @@
-# CleanArch - Kotlin Multiplatform Project
+# RestaurantApp - Kotlin Multiplatform Project
 
-CleanArch is a **Kotlin Multiplatform (KMP)** project designed with a robust **Clean Architecture** and **MVI (Model-View-Intent)** pattern. It targets both **Android** and **iOS** platforms using **Compose Multiplatform** for a unified UI experience.
+RestaurantApp is a **Kotlin Multiplatform (KMP)** project designed with **Clean Architecture** and the **MVI (Model-View-Intent)** pattern. It targets both **Android** and **iOS** platforms using **Compose Multiplatform** for a unified UI experience.
 
 ## 🚀 Project Overview
 
@@ -46,7 +46,7 @@ Shared strings and design tokens (`TokenResources`), consumed by every `feature:
 
 ### Module Boundaries & Dependency Graph
 
-The graph above isn't just convention — `specs/013-enforce-module-boundaries` added a `verifyModuleBoundaries` build task (rules defined once in `build-logic/src/main/kotlin/cleanarch/convention/ModuleBoundaries.kt`) that runs as part of `./gradlew check`/`build`. It fails the build, naming the exact offending module and the prohibited dependency it declared, the moment any module adds a project dependency outside its permitted layer (e.g. a `feature:*` module depending on `data:*` directly).
+The graph above isn't just convention — `specs/013-enforce-module-boundaries` added a `verifyModuleBoundaries` build task (rules defined once in `build-logic/src/main/kotlin/restaurantapp/convention/ModuleBoundaries.kt`) that runs as part of `./gradlew check`/`build`. It fails the build, naming the exact offending module and the prohibited dependency it declared, the moment any module adds a project dependency outside its permitted layer (e.g. a `feature:*` module depending on `data:*` directly).
 
 ## 🛠️ Tech Stack
 

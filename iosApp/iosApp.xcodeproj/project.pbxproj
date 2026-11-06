@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		2B6D6DA03C7611C0FA30348D /* CleanArch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CleanArch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B6D6DA03C7611C0FA30348D /* RestaurantApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RestaurantApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,7 +50,7 @@
 		829651D918FC8F21697BD137 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2B6D6DA03C7611C0FA30348D /* CleanArch.app */,
+				2B6D6DA03C7611C0FA30348D /* RestaurantApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = 2B6D6DA03C7611C0FA30348D /* CleanArch.app */;
+			productReference = 2B6D6DA03C7611C0FA30348D /* RestaurantApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

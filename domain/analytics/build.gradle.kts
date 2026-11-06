@@ -1,5 +1,5 @@
 plugins {
-    id("cleanarch.kmp.base")
+    id("restaurantapp.kmp.base")
 }
 
 kotlin {

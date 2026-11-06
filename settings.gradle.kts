@@ -1,4 +1,4 @@
-rootProject.name = "CleanArch"
+rootProject.name = "RestaurantApp"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -36,7 +36,7 @@ dependencyResolutionManagement {
 include(":composeApp")
 include(":androidApp")
 include(":domain:auth")
-include(":domain:orders")
+include(":domain:bookings")
 include(":domain:settings")
 include(":domain:analytics")
 include(":presentation")
@@ -48,7 +48,7 @@ include(":core:mvi")
 include(":core:analytics")
 include(":core:notifications")
 include(":data:auth")
-include(":data:orders")
+include(":data:bookings")
 include(":data:settings")
 include(":data:analytics")
 include(":feature:splash")
@@ -58,6 +58,6 @@ include(":feature:forgot_password")
 include(":feature:home")
 include(":feature:settings")
 include(":feature:profile")
-include(":feature:orders")
+include(":feature:bookings")
 include(":feature:edit_profile")
 include(":feature:privacy_policy")

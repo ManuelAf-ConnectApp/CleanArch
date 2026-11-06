@@ -1,8 +1,8 @@
-# CleanArch Wiki
+# RestaurantApp Wiki
 
 > Contenido pensado para pegarse como página `Home` de la Wiki de GitHub del repositorio
-> (`https://github.com/ManuelAf-ConnectApp/CleanArch/wiki`), o para usarse como base al
-> clonar `CleanArch.wiki.git` y dividirlo en páginas independientes (una por cada sección
+> (`https://github.com/ManuelAf-ConnectApp/RestaurantApp/wiki`), o para usarse como base al
+> clonar `RestaurantApp.wiki.git` y dividirlo en páginas independientes (una por cada sección
 > `##` de este documento). Mantenlo sincronizado con `README.md`: el README es la puerta de
 > entrada rápida para quien clona el repo, esta Wiki es la referencia extendida (arquitectura,
 > decisiones, troubleshooting).
@@ -21,14 +21,14 @@
 
 ## Visión general
 
-CleanArch es un proyecto **Kotlin Multiplatform (KMP)** con **Clean Architecture** + **MVI
+RestaurantApp es un proyecto **Kotlin Multiplatform (KMP)** con **Arquitectura Limpia** + **MVI
 (Model-View-Intent)**, dirigido a **Android** e **iOS** con **Compose Multiplatform** como capa
 de UI compartida. El objetivo es demostrar una arquitectura escalable y mantenible para
 desarrollo cross-platform, con una única base de código para la mayor parte de la lógica.
 
 ## Arquitectura
 
-El proyecto sigue Clean Architecture dividida en un módulo Gradle por feature/capa
+El proyecto sigue una Arquitectura Limpia dividida en un módulo Gradle por feature/capa
 (`specs/002-feature-modularization`, `specs/003-decentralize-domain-data-di`), en vez de en
 cuatro módulos monolíticos. El grafo de dependencias permitido entre ellos se fuerza en
 build-time — ver [Módulos y grafo de dependencias](#módulos-y-grafo-de-dependencias).
@@ -89,7 +89,7 @@ con el `Activity`, manifest y empaquetado, y solo depende de `:composeApp`.
 
 El grafo anterior no es solo convención — `specs/013-enforce-module-boundaries` añadió una
 tarea de build `verifyModuleBoundaries` (reglas definidas una vez en
-`build-logic/src/main/kotlin/cleanarch/convention/ModuleBoundaries.kt`) que corre como parte de
+`build-logic/src/main/kotlin/restaurantapp/convention/ModuleBoundaries.kt`) que corre como parte de
 `./gradlew check`/`build`. Falla el build, nombrando el módulo infractor exacto y la
 dependencia prohibida que declaró, en el momento en que cualquier módulo añade una dependencia
 de proyecto fuera de su capa permitida (p. ej. un `feature:*` dependiendo de `data:*`
